@@ -177,3 +177,28 @@ FROM raw.trans;
 
 ALTER TABLE clean.trans ADD PRIMARY KEY (trans_id);
 ALTER TABLE clean.trans ADD FOREIGN KEY (account_id) REFERENCES clean.account (account_id);
+
+-- Helper view: one row per loan with the account owner, the owner's age at the
+-- loan date and the district of the bank branch (used by the analyses)
+CREATE VIEW clean.loan_overview AS
+SELECT
+    l.loan_id,
+    l.account_id,
+    l.loan_date,
+    l.amount,
+    l.duration_months,
+    l.monthly_payment,
+    l.status,
+    l.is_bad_loan,
+    l.is_finished,
+    c.client_id,
+    c.gender,
+    EXTRACT(YEAR FROM AGE(l.loan_date, c.birth_date))::INTEGER AS age_at_loan,
+    d.district_id,
+    d.district_name,
+    d.region
+FROM clean.loan     AS l
+JOIN clean.disp     AS dp ON dp.account_id = l.account_id AND dp.disp_type = 'owner'
+JOIN clean.client   AS c  ON c.client_id   = dp.client_id
+JOIN clean.account  AS a  ON a.account_id  = l.account_id
+JOIN clean.district AS d  ON d.district_id = a.district_id;

@@ -67,3 +67,10 @@ FROM raw.trans AS r
 JOIN clean.trans AS c ON c.trans_id = r.trans_id
 GROUP BY r.operation, c.operation
 ORDER BY transactions DESC;
+
+-- The loan overview view must have exactly one row per loan
+
+SELECT
+    COUNT(*)                AS total_rows,
+    COUNT(DISTINCT loan_id) AS distinct_loans
+FROM clean.loan_overview;
