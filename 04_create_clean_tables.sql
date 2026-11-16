@@ -202,3 +202,6 @@ JOIN clean.disp     AS dp ON dp.account_id = l.account_id AND dp.disp_type = 'ow
 JOIN clean.client   AS c  ON c.client_id   = dp.client_id
 JOIN clean.account  AS a  ON a.account_id  = l.account_id
 JOIN clean.district AS d  ON d.district_id = a.district_id;
+
+-- Index for fast lookup of an account's transactions in date order
+CREATE INDEX idx_trans_account_date ON clean.trans (account_id, trans_date);

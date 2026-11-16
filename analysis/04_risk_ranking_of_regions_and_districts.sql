@@ -88,6 +88,3 @@ ORDER BY bad_loan_rate_pct DESC;
 --    and Ostrava rank high, while Prague is below average (8.3%).
 -- 4. West Bohemia has no district with at least 10 loans, so it is missing from the
 --    per-region ranking in 4c. District-level results rely on very small samples.
-
--- Index for fast lookup of an account's transactions in date order
-CREATE INDEX idx_trans_account_date ON clean.trans (account_id, trans_date);
